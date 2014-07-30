@@ -1,0 +1,18 @@
+[
+	{"stateName":"Andaman and Nicobar Islands" ,"stateId":1},
+	{"stateName":"Andhra Pradesh" ,"stateId":2},
+	{"stateName":"Arunachal Pradesh" ,"stateId":3},
+	{"stateName":"Assam" ,"stateId":4},
+	{"stateName":"Bihar" ,"stateId":5},
+	{"stateName":"Chandigarh" ,"stateId":6},
+	{"stateName":"Chhattisgarh" ,"stateId":7},
+	{"stateName":"Goa" ,"stateId":8},
+	{"stateName":"Gujarat" ,"stateId":9},
+	{"stateName":"Haryana" ,"stateId":10},
+	{"stateName":"Himachal Pradesh" ,"stateId":11},
+	{"stateName":"Jammu and Kashmir" ,"stateId":12},
+	{"stateName":"Jharkhand" ,"stateId":13},
+	{"stateName":"Karnataka" ,"stateId":14},
+	{"stateName":"Madhya Pradesh" ,"stateId":15},
+	{"stateName":"Uttar Pradesh" ,"stateId":16}
+]

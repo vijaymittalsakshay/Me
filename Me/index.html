@@ -1,139 +1,243 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title></title>
-    <meta charset="utf-8" />
-    <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
-    <link href="styles/main.css" rel="stylesheet" />
+    <head>
+        <style>html { font-size: 12px; font-family: Arial, Helvetica, sans-serif; }</style>
+        <title></title>
+        <meta charset="utf-8" />
+        <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+        <link href="kendo/styles/kendo.common.min.css" rel="stylesheet" />
+        <link href="kendo/styles/kendo.default.min.css" rel="stylesheet" />
+        <link href="kendo/styles/kendo.default.mobile.min.css" rel="stylesheet" />
+        <link href="styles/main.css" rel="stylesheet" />
+        <link href="Project/style/myCss.css" rel="stylesheet"/>
+        <link href="Project/style/main.css" rel="stylesheet"/>
 
-    <script src="cordova.js"></script>
-    <script src="kendo/js/jquery.min.js"></script>
-    <script src="kendo/js/kendo.mobile.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+        <script src="cordova.js"></script>
+        <script src="kendo/js/jquery.min.js"></script>
+        <!-- <script src="kendo/js/kendo.mobile.min.js"></script>-->
+        <script src="kendo/js/kendo.all.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
 
-    <script src="scripts/app.js"></script>
-    <script src="scripts/login.js"></script>
-    <script src="scripts/location.js"></script>
-    <script src="scripts/weather.js"></script>
-</head>
-<body>
-    <!--Home View-->
-    <div id="tabstrip-home"
-        data-role="view"
-        data-title="Home">
-        <header data-role="header">
-            <div data-role="navbar">
-                <span data-role="view-title"></span>
-                <a id="skin-change" data-role="button" data-align="right" data-click="app.changeSkin">Flat</a>
+        <script src="Project/lib/everlive.all.min.js"></script>
+        <script src="Project/app/app.js"></script>
+        <script src="Project/app/login.js"></script>
+        <script src="Project/app/signup.js"></script>
+        <script src="Project/app/home.js"></script>
+
+        <style>
+            #login-page .km-content { background-color: #E6E6E6; }
+            #register .km-content { background-color: #E6E6E6}
+            /*for submit button*/
+            .km-submit:after,
+            .km-submit:before
+            {
+                content: "\e01c";
+                font-size: 23px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <!--LOGIN PAGE-->
+        <div data-role="view" id="login-page" data-title="Login" data-model="app.loginService.viewModel">
+            <!--Content-->
+            <h1 class="welcome" data-bind="visible: isLoggedIn">
+                Welcome, <span data-bind="text: username"></span>!
+            </h1>
+            <div class="buttonArea">
+                <input type="submit" id="logout" data-role="button" data-bind="click: onLogout, visible: isLoggedIn" class="login-button" value="Logout" />
             </div>
-        </header>
+            <div style="width:95%;height:auto;margin:0px auto;margin-top:50px;border:0px solid #ccc;" >
+                <div data-bind="invisible: isLoggedIn">
+                    <form id="login-form" data-bind="events: { keyup: checkEnter }">
+                        <div style="width:95%;height:auto;margin:0px auto;margin-top:10px;margin-bottom:10px;border:0px solid #ccc;">
+                            <label>
+                                <input type="text" name="login_username" id="log_uname" data-bind="value:login_username" class="myTextbox" placeholder="Username"/>
+                            </label>
+                            <label>
+                                <input type="password" name="login_password" id="log_pwd" data-bind="value:login_password" class="myTextbox" placeholder="Password" style="margin-top:10px;"/>
+                            </label>
+                        </div>
+                        <div style="width:95%;height:auto;margin:0px auto;margin-top:30px;margin-bottom:10px;border:0px solid #ccc;">
+                            <a data-role="button" class="myButton" style="background-color:#3b5998;color:white" data-bind="click:LoginValidation,invisible: isLoggedIn">Submit</a>
+                        </div>
+                        <div style="width:43%;height:auto;margin:0px auto;margin-top:20px;margin-bottom:10px;border:0px solid #ccc;">
+                            <a href="" style="text-decoration:none;">
+                                <span style="font-size:15px;color:#3b5998">Forgot Password ?</span>
+                            </a>
+                        </div>
+                        <div style="width:68%;height:auto;margin:0px auto;margin-top:15px;margin-bottom:10px;border:0px solid #ccc;">
+                            <span style="font-size:14px;color:#3b5998">Don't have an account</span>
+                            <a href="#register" style="text-decoration:none;font-size:18px;color:blue;font-weight:100;">Signup</a>
+                        </div>
+                    </form>
+                </div>
 
-        <h3>Welcome!</h3>
-        <p>
-            Telerik AppBuilder&trade; enables you to build cross-platform device applications regardless of your
-            development platform by combining the convenience of a local development toolset with the
-            power and flexibility of the cloud.
-        </p>
-        <div class="welcome-image"></div>
-    </div>
-
-    <!--Login View-->
-    <div id="tabstrip-login"
-        data-role="view"
-        data-title="Login"
-        data-model="app.loginService.viewModel">
-
-        <div class="logo-image"></div>
-        <div>
-            <h3 data-bind="visible: isLoggedIn">Welcome, <span data-bind="    text: username"></span>!</h3>
-            <input id="logout" type="submit" data-role="button" data-bind="click: onLogout, visible: isLoggedIn" value="Logout" class="login-button" />
-        </div>
-        <form data-bind="events: { keyup: checkEnter }">
-            <h3 data-bind="invisible: isLoggedIn">Enter your credentials:</h3>
-            <ul data-role="listview" data-style="inset" data-bind="invisible: isLoggedIn">
-                <li>
-                    <label>
-                        <div>Username</div>
-                        <input type="text" data-bind="value: username" />
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <div>Password</div>
-                        <input type="password" data-bind="value: password" />
-                    </label>
-                </li>
-            </ul>
-            <input id="login" type="submit" data-role="button" data-bind="click: onLogin, invisible: isLoggedIn" value="Login" class="login-button" />
-        </form>
-    </div>
-
-    <!--Location View-->
-    <div id="tabstrip-location"
-        data-role="view"
-        data-title="Location"
-        data-init="app.locationService.initLocation"
-        data-show="app.locationService.show"
-        data-hide="app.locationService.hide"
-        data-model="app.locationService.viewModel"
-        data-stretch="true">
-
-        <div id="map-canvas" class="map" data-bind="visible: isGoogleMapsInitialized"></div>
-
-        <div id="no-map" data-bind="invisible: isGoogleMapsInitialized">
-            <h3>Location requires internet connection to display the map.</h3>
-        </div>
-        <div id="map-search-wrap" class="map-tools" data-bind="visible: isGoogleMapsInitialized">
-            <div>
-                <button id="map-navigate-home" class="map-tools-button home" data-bind="click: onNavigateHome"></button>
-                <input id="map-address" type="search" class="map-tools-input" data-bind="value: address" placeholder="Address" />
-                <button id="map-search" class="map-tools-button search" data-bind="click: onSearchAddress"></button>
-            </div>
-        </div>
-    </div>
-
-    <!--Weather View-->
-    <div id="tabstrip-weather"
-        data-role="view"
-        data-title="Weather"
-        data-model="app.weatherService.viewModel">
-
-        <ul data-role="listview" data-style="inset"
-            data-bind="source: weatherDataSource"
-            data-template="weather-forecast-template">
-        </ul>
-    </div>
-
-    <!--Weather forecast template-->
-    <script id="weather-forecast-template" type="text/x-kendo-tmpl">
-        <div class="w-item-template">
-            <span class="w-icon ${image}"></span>
-            <h4 class="w-date">${day}</h4>
-            <div class="w-temp">
-                <span>${highTemperature}<sup>&deg;</sup></span>
-                <span>${lowTemperature}<sup>&deg;</sup></span>
-            </div>
-        </div>
-    </script>
-
-    <!--Layout-->
-    <div data-role="layout" data-id="tabstrip-layout">
-        <!--Header-->
-        <div data-role="header">
-            <div data-role="navbar">
-                <span data-role="view-title"></span>
+                <div style="width:100%;height:auto;margin:0px auto;margin-top:25px;display:block">
+                    <hr style="width:42.5%;float:left; border:1px solid #999999;"><span style="text-align:center;">&nbsp;&nbsp;OR&nbsp;&nbsp;</span>
+                    <hr style="width:42.5%;float:right;border:1px solid #999999;">
+                </div>
+                <div style="width:80%;height:auto;margin:0px auto;margin-top:25px;margin-bottom:15px;">
+                    <a href="#" data-role="button" data-bind="click:facebook" style="width:100%;height:38px;background:url('Project/images/images.jpg') no-repeat; background-size:100% 35px;"></a>
+                </div>
             </div>
         </div>
 
-        <!--Footer-->
-        <div data-role="footer">
-            <div data-role="tabstrip">
-                <a href="#/" data-icon="home">Home</a>
-                <a href="#tabstrip-login" data-icon="contacts">Login</a>
-                <a href="#tabstrip-location" data-icon="search">Location</a>
-                <a href="#tabstrip-weather" data-icon="globe">Weather</a>
+        <!--REGISTER-->
+        <div data-role="view" id="register" data-title="Register" data-model="app.signupService.viewModel" data-show="app.signupService.viewModel.show">
+            <header data-role="header">
+                <div data-role="navbar" style="background-color:#333333;color:white;font-size:15px;">
+                    <!--<a style="background:url('Project/images/icon-arrow_left@2x.png')  no-repeat; background-position: .65em 50%;background-size:20px; 10px;" data-role="backbutton" data-align="left"></a>-->
+                    <a data-role="backbutton" data-align="left">Back</a>
+                    <span data-role="view-title"></span>
+                    <a style="border:0px solid black;background-color:#333333;" id="submit" data-role="button" data-bind="click:onSubmit" data-align="right" data-icon="submit"></a>
+                </div>
+            </header>
+
+            <!--content-->
+            <div style="width:95%;height:auto;margin:0px auto;margin-top:10px;border:0px solid #ccc;">
+                <form>
+                    <div style="width:95%;height:auto;margin:0px auto;margin-top:10px;margin-bottom:10px;border:0px solid #ccc;">
+                        <label>
+                            <input type="text" name="signup_name" id="reg_name" class="myTextbox" placeholder="Name" data-bind="value:regName" style="margin-top:0px;"/>
+                        </label>
+                        <label>
+                            <input type="text" name="signup_email" id="reg_email" class="myTextbox" placeholder="Email Address" data-bind="value:regEmail" />
+                        </label>
+                        <label>
+                            <input type="text" name="signup_uname" id="reg_uname" class="myTextbox" placeholder="Username" data-bind="value:regUName"/>
+                        </label>
+                        <label>
+                            <input type="password" name="signup_pwd" id="reg_pwd" class="myTextbox" placeholder="Password" data-bind="value:regUPwd"/>
+                        </label>
+                        <label>
+                            <select name="gender" id="gen" class="myTextbox" data-bind="value:Gender" style="margin-top:10px;height:42px;margin-bottom:10px;">
+                                <option selected="selected">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </label>
+                        <label>
+                            <input id="dob" data-bind="value:dob" style="width:100%;margin-top:0px;height:30px;"/>
+                        </label>
+                        <!--Contact Details-->
+                        <div style="margin-top:15px;width:100%;height:auto;border:0px solid #ccc;padding-top:3px;margin-bottom:20px;">
+                            <span style="font-size:14px;margin-left:5px;">Do you have a Contact Number?</span><br><br>
+                            <label style="margin-left:10px;">
+                                <input type="radio" name="contactRadio" id="cont_yes"/> Yes
+                            </label>
+                            <label style="margin-left:130px;">
+                                <input type="radio" name="contactRadio" id="cont_no"/> No
+                            </label>
+
+                            <div id="cont_div" style="margin-top:10px;width:100%;height:auto;border:1px solid #ccc;margin-bottom:10px;padding:10px;background-color:#E0FFA3;border-radius:5px;">
+                                <input type="number" name="signup_contact" id="reg_contact" class="myTextbox" placeholder="Contact Number" maxlength="10" data-bind="value:regContact" style="margin-top:0px;height:42px;width:100%"/>
+                            </div>
+                        </div>
+                        <!--Address Details-->
+                        <div style="margin-top:10px;width:100%;height:auto;border:0px solid #ccc;padding-top:3px;margin-bottom:20px;">
+                            <span style="font-size:14px;margin-left:5px;">Do you want to Insert Address detail?</span><br><br>
+                            <label style="margin-left:10px;">
+                                <input type="radio" name="addRadio" id="add_yes"/> Yes
+                            </label>
+                            <label style="margin-left:130px;">
+                                <input type="radio" name="addRadio" id="add_no"/> No
+                            </label>
+                            <div id="addressDetail" style="margin-top:10px;width:100%;height:auto;border:1px solid #ccc;margin-bottom:10px;padding:10px;background-color:#E0FFA3;border-radius:5px;">
+                                <div style="margin-top:0px;width:270px;">
+                                    <input id="state" data-bind="value:state" class="" style="width:200px;margin-top:0px;"/>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    <input id="city" data-bind="value:city" class="" style="width:200px;margin-top:0px;" disabled/>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    <input id="zip" type="text" data-bind="value:zipcode" class="myTextbox" placeholder="Zipcode" style="width:100%;height:38px;margin-top:0px;" disabled/>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    <input id="address" type="text" data-bind="value:address" class="myTextbox" placeholder="Address" style="width:100%;height:42px;margin-top:0px;"/>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Signature-->
+                        <div style="margin-top:10px;width:100%;height:auto;border:0px solid #ccc;padding-top:3px;margin-bottom:20px;">
+                            <label>
+                                <textarea id="signature" style="width:100%;height:70px;" disabled>
+
+                                </textarea>
+                            </label>
+                            <label>
+                                <a data-role="button" href="#signatureView" style="">Signature Please</a>
+                            </label>
+                        </div>
+
+                        <!---->
+                    </div>
+                    <div style="width:95%;height:auto;margin:0px auto;margin-top:30px;margin-bottom:10px;border:0px solid #ccc;">
+                        <a data-role="button" class="myButton" data-bind="click:hello" style="height:45px;line-height:25px;background-color:#3b5998;color:white" >Register</a>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
-</body>
+
+        <!--SIGNATURE VIEW PAGE-->
+
+        <div data-role="view" id="signatureView">
+            <div style="height:90%;">
+                <form method="POST" action="">
+                    <canvas class="" id="newSignature" style="height:99%;width:100%;min-height:50px;"></canvas>
+                    <fieldset style="width:100%;height:auto;background-color:white;">
+                        <a data-role="button" data-click="signatureSave" style="width:90px;height:40px;text-align:center;line-height:25px;border:1px solid #ccc;background-color:#3b5998;color:white;font-weight:bold;margin-left:40px;mar">Save</a>
+                        <!--<input type="reset" value="Clear" style="width:90px;height:40px;margin-left:10px;background-color:#3b5998;color:white;font-size:16px;border-radius:5px;"/>-->
+                        <a data-role="button" href="#reg" style="width:90px;height:40px;text-align:center;line-height:25px;margin-left:40px;background-color:#3b5998;color:white;font-weight:bold;">Cancel</a>
+                    </fieldset>
+                </form>
+            </div>
+            <script src="Project/app/jquery.signaturepad.js"></script>
+            <script>
+                (function(window) {
+                    var $canvas,
+                        onResize = function(event) {
+                            $canvas.attr({
+                                             height: window.innerHeight,
+                                             width: window.innerWidth
+                                         });
+                        };
+                                                   
+                    $(document).ready(function() {
+                        $canvas = $('canvas');
+                        window.addEventListener('orientationchange', onResize, false);
+                        window.addEventListener('resize', onResize, false);
+                        onResize();
+                                                   
+                        $('form').signaturePad({
+                                                   drawOnly: true,
+                                                   defaultAction: 'drawIt',
+                                                   validateFields: false,
+                                                   lineWidth: 0,
+                                                   output: null,
+                                                   sigNav: null,
+                                                   name: null,
+                                                   typed: null,
+                                                   clear: 'input[type=reset]',
+                                                   typeIt: null,
+                                                   drawIt: null,
+                                                   typeItDesc: null,
+                                                   drawItDesc: null
+                                               });
+                    });
+                }(this));
+                
+                function signatureSave() {
+                    var canvas = document.getElementById("newSignature");// save canvas image as data url (png format by default)
+                    var dataURL = canvas.toDataURL("image/png");
+                    //document.getElementById("saveSignature").src = dataURL;
+                    // window.location.href = dataURL;
+                    // alert(dataURL);
+                    document.write('This is Image : ' + '<img src="' + dataURL + '"/>');
+                };
+            </script>
+            <script src="Project/app/json2.min.js"></script>
+
+        </div>
+    </body>
 </html>
