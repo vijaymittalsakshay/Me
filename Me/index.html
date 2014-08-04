@@ -11,10 +11,16 @@
         <link href="styles/main.css" rel="stylesheet" />
         <link href="Project/style/myCss.css" rel="stylesheet"/>
         <link href="Project/style/main.css" rel="stylesheet"/>
+        
+        <link rel="stylesheet" href="Project/style/jquery.signaturepad.css">
 
         <script src="cordova.js"></script>
         <script src="kendo/js/jquery.min.js"></script>
+        
+         <script src="Project/app/jquery.signaturepad.js"></script>
+         <script src="Project/app/json2.min.js"></script>
         <!-- <script src="kendo/js/kendo.mobile.min.js"></script>-->
+        
         <script src="kendo/js/kendo.all.min.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
 
@@ -23,6 +29,8 @@
         <script src="Project/app/login.js"></script>
         <script src="Project/app/signup.js"></script>
         <script src="Project/app/home.js"></script>
+         <script src="Project/app/signature.js"></script>
+        
 
         <style>
             #login-page .km-content { background-color: #E6E6E6; }
@@ -33,6 +41,50 @@
             {
                 content: "\e01c";
                 font-size: 23px;
+            }
+        </style>
+
+        <style>
+            *
+            {
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                user-select: none;
+            }
+            html, body
+            {
+                max-width: 100%;
+                width: 100%;
+                overflow: hidden;
+            }
+            html, body, form
+            {
+                margin: 0px;
+            }
+            html, form
+            {
+                padding: 0px;
+            }
+            html, body, fieldset
+            {
+                background: white;
+            }
+            fieldset
+            {
+                position: absolute;
+                border: 0px solid #aaa;
+                background: white;
+                right: 0px;
+                bottom: 0px;
+            }
+            canvas
+            {
+                outline: 5px solid #aaa;
+                background: #fff;
+            }
+            input[type=submit], input[type=reset]
+            {
+                font-size: larger;
             }
         </style>
     </head>
@@ -82,8 +134,13 @@
                 </div>
             </div>
         </div>
+        
+        
+ <!--************************************************************************************************************************-->       
+        
+        
 
-        <!--REGISTER-->
+        <!--Register view-->
         <div data-role="view" id="register" data-title="Register" data-model="app.signupService.viewModel" data-show="app.signupService.viewModel.show">
             <header data-role="header">
                 <div data-role="navbar" style="background-color:#333333;color:white;font-size:15px;">
@@ -158,86 +215,44 @@
                                 </div>
                             </div>
                         </div>
-                        <!--Signature-->
+                        <!--Signature Div-->
                         <div style="margin-top:10px;width:100%;height:auto;border:0px solid #ccc;padding-top:3px;margin-bottom:20px;">
                             <label>
-                                <textarea id="signature" style="width:100%;height:70px;" disabled>
+                                <textarea data-bind="value:Signdata" id="signature-field" style="width:100%;height:70px;" disabled>
 
                                 </textarea>
                             </label>
                             <label>
-                                <a data-role="button" href="#signatureView" style="">Signature Please</a>
+                                <a href="#sign-view" id="signatureBTN" data-role="button">Signature Please</a>
                             </label>
                         </div>
 
-                        <!---->
                     </div>
                     <div style="width:95%;height:auto;margin:0px auto;margin-top:30px;margin-bottom:10px;border:0px solid #ccc;">
-                        <a data-role="button" class="myButton" data-bind="click:hello" style="height:45px;line-height:25px;background-color:#3b5998;color:white" >Register</a>
+                        <a data-role="button" class="myButton" data-bind="click:signup" style="height:45px;line-height:25px;background-color:#3b5998;color:white" >Register</a>
                     </div>
                 </form>
             </div>
         </div>
-
-        <!--SIGNATURE VIEW PAGE-->
-
-        <div data-role="view" id="signatureView">
+        
+        
+        
+         <!--************************************************************************************************************************-->       
+        
+        
+        <div data-role="view" id="sign-view" data-transition="zoom" data-model="app.signupService.viewModel" data-show="app.signupService.viewModel.show">
             <div style="height:90%;">
-                <form method="POST" action="">
+                <form id="ss">
                     <canvas class="" id="newSignature" style="height:99%;width:100%;min-height:50px;"></canvas>
                     <fieldset style="width:100%;height:auto;background-color:white;">
-                        <a data-role="button" data-click="signatureSave" style="width:90px;height:40px;text-align:center;line-height:25px;border:1px solid #ccc;background-color:#3b5998;color:white;font-weight:bold;margin-left:40px;mar">Save</a>
-                        <!--<input type="reset" value="Clear" style="width:90px;height:40px;margin-left:10px;background-color:#3b5998;color:white;font-size:16px;border-radius:5px;"/>-->
-                        <a data-role="button" href="#reg" style="width:90px;height:40px;text-align:center;line-height:25px;margin-left:40px;background-color:#3b5998;color:white;font-weight:bold;">Cancel</a>
+                        <!--<input type="submit" id="saveDataBTN" value="Save" data-bind="click:saveData"/>-->
+                       <a data-role="button" data-bind="click:saveData" style="width:85px;height:40px;text-align:center;line-height:25px;border:1px solid #ccc;border-radius:5px;background-color:#3b5998;color:white;font-weight:bold;margin-left:10px;mar">Save</a>
+                        <input type="reset" value="Clear" style="width:85px;height:40px;margin-left:10px;background-color:#3b5998;color:white;font-size:16px;border-radius:5px;"/>
+                        <a data-role="button" href="#register"  style="width:85px;height:40px;text-align:center;line-height:25px;margin-left:10px;background-color:#3b5998;color:white;font-weight:bold;">Cancel</a>
                     </fieldset>
                 </form>
             </div>
-            <script src="Project/app/jquery.signaturepad.js"></script>
-            <script>
-                (function(window) {
-                    var $canvas,
-                        onResize = function(event) {
-                            $canvas.attr({
-                                             height: window.innerHeight,
-                                             width: window.innerWidth
-                                         });
-                        };
-                                                   
-                    $(document).ready(function() {
-                        $canvas = $('canvas');
-                        window.addEventListener('orientationchange', onResize, false);
-                        window.addEventListener('resize', onResize, false);
-                        onResize();
-                                                   
-                        $('form').signaturePad({
-                                                   drawOnly: true,
-                                                   defaultAction: 'drawIt',
-                                                   validateFields: false,
-                                                   lineWidth: 0,
-                                                   output: null,
-                                                   sigNav: null,
-                                                   name: null,
-                                                   typed: null,
-                                                   clear: 'input[type=reset]',
-                                                   typeIt: null,
-                                                   drawIt: null,
-                                                   typeItDesc: null,
-                                                   drawItDesc: null
-                                               });
-                    });
-                }(this));
-                
-                function signatureSave() {
-                    var canvas = document.getElementById("newSignature");// save canvas image as data url (png format by default)
-                    var dataURL = canvas.toDataURL("image/png");
-                    //document.getElementById("saveSignature").src = dataURL;
-                    // window.location.href = dataURL;
-                    // alert(dataURL);
-                    document.write('This is Image : ' + '<img src="' + dataURL + '"/>');
-                };
-            </script>
-            <script src="Project/app/json2.min.js"></script>
-
         </div>
+        
     </body>
 </html>
